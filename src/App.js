@@ -1,16 +1,18 @@
 import Header from './components/Header';
 import Home from './components/Home';
+import Posts from './components/Posts';
+import { images } from './images/images';
 import User from './components/User';
 import React, { useEffect } from 'react';
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {
   const [users, setUsers] = React.useState([]);
-  const [images, setImages] = React.useState([]);
   const [posts, setPosts] = React.useState([]);
+  const [userPosts, setUserPosts] = React.useState([]);
+  const [currentUser, setCurrentUser] = React.useState('');
   useEffect(() => {
     retrieveUsers();
     retrievePosts();
-    retrieveImages();
   }, []);
 
   // function that will retreive users from API
@@ -33,34 +35,58 @@ function App() {
     setPosts(postArray);
   };
 
-  // function that will retreive images from API
-  let retrieveImages = async () => {
-    // retrieve posts from api
-    const response = await fetch('https://jsonplaceholder.typicode.com/photos');
-    // convert JSON to JavaScript object
-    const photoArray = await response.json();
-    // remove all images except first 10
-    photoArray.splice(10);
-    // set image state
-    setImages(photoArray);
+  const retrieveUserPosts = (user) => {
+    const p = posts.filter((post) => {
+      return post.userId === Number(user.id);
+    });
+    setCurrentUser(user.name);
+    setUserPosts(p);
   };
-  console.log(images);
   // function that will create components from users array
   const usersComponents = users.map((user, index) => {
     return (
       <User
-        image={images[index].thumbnailUrl}
+        user={user}
+        key={user.id}
+        image={images[index]}
         email={user.email}
         name={user.name}
-        func={displayPosts}
+        func={retrieveUserPosts}
       ></User>
     );
   });
+
+  // function that will create components from userPosts array
+  const usersPostComponents = userPosts.map((posts) => {
+    return (
+      <>
+        <Posts
+          title={posts.title}
+          body={posts.body}
+          key={posts.title + 1}
+        ></Posts>
+      </>
+    );
+  });
+  const postPage = (function () {
+    return (
+      <>
+        <h3>{`${currentUser}'s Posts`}</h3>
+        {usersPostComponents}
+      </>
+    );
+  })();
   return (
-    <div className="App">
-      <Header></Header>
-      {usersComponents}
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Header></Header>
+        <Routes>
+          <Route path="/" element={<Home></Home>}></Route>
+          <Route path="/users" element={usersComponents}></Route>
+          <Route path="/posts" element={postPage}></Route>
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 

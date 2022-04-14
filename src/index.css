@@ -27,11 +27,15 @@ body,
   justify-content: center;
   align-items: center;
   color: black;
+  padding: 5px;
 }
 .links {
   width: 50%;
   display: flex;
   justify-content: space-around;
+}
+.header a:visited {
+  color: black;
 }
 .home--container {
   margin-top: 80px;
@@ -63,4 +67,24 @@ img {
 }
 .email {
   font-style: italic;
+}
+a {
+  text-decoration: none;
+  cursor: pointer;
+}
+a:visited {
+  color: white;
+  text-decoration: none;
+}
+.post--container {
+  border-style: solid;
+  border-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: auto;
+  width: 85%;
+  margin-top: 25px;
 }
