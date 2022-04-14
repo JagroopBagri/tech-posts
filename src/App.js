@@ -77,7 +77,7 @@ function App() {
     );
   })();
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/tech-posts">
       <div className="App">
         <Header></Header>
         <Routes>
